@@ -29,7 +29,7 @@ app = Flask(__name__, template_folder=tmpl_dir)
 #
 #     DATABASEURI = "postgresql://gravano:foobar@35.243.220.243/proj1part2"
 #
-DATABASEURI = "postgresql://user:password@35.243.220.243/proj1part2"
+DATABASEURI = "postgresql://do2330:5822@35.231.103.173/proj1part2"
 
 
 #
@@ -197,7 +197,7 @@ if __name__ == "__main__":
 
     """
 
-    HOST, PORT = host, port
+    HOST, PORT = host, port 
     print("running on %s:%d" % (HOST, PORT))
     app.run(host=HOST, port=PORT, debug=debug, threaded=threaded)
 
