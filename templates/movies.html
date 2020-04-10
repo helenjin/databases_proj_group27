@@ -1,0 +1,24 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+<body>
+  <h1>Movies</h1>
+
+  <div>
+    {% set link = '' %}
+    {% for n in data %}
+    {% set link = 'movies/' + n %}
+    <div><a href={{link}}>{{n}}</a></div>
+    {% endfor %}
+  </div>
+  </div>
+
+</body>
+
+</html>
