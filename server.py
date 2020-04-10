@@ -157,9 +157,16 @@ def index():
 # Notice that the function name is another() rather than index()
 # The functions for each app.route need to have different names
 #
-@app.route('/another')
+@app.route('/movies')
 def another():
-  return render_template("another.html")
+  cursor = g.conn.execute("SELECT * FROM movie ORDER BY movie.title")
+  movies = []
+  for result in cursor:
+    movies.append(result['title'])  # can also be accessed using result[0]
+  cursor.close()
+
+  context = dict(data = movies)
+  return render_template("movies.html", **context)
 
 
 # Example of adding new data to the database
