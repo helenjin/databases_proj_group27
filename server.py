@@ -158,7 +158,7 @@ def index():
 # The functions for each app.route need to have different names
 #
 @app.route('/movies')
-def another():
+def movies():
   cursor = g.conn.execute("SELECT * FROM movie ORDER BY movie.title")
   movies = []
   for result in cursor:
@@ -168,6 +168,17 @@ def another():
   context = dict(data = movies)
   return render_template("movies.html", **context)
 
+@app.route('/movies/<title>')
+def movie(title):
+  query = "SElECT * FROM movie WHERE movie.title = '{0}'".format(title)
+  cursor = g.conn.execute(query)
+  movie = []
+  for result in cursor:
+    movie.append(result['title'])  # can also be accessed using result[0]
+  cursor.close()
+ 
+  context = dict(data = movie)
+  return render_template("movie.html", **context)
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
@@ -175,7 +186,6 @@ def add():
   name = request.form['name']
   g.conn.execute('INSERT INTO test(name) VALUES (%s)', name)
   return redirect('/')
-
 
 @app.route('/login')
 def login():
