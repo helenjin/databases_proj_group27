@@ -170,15 +170,25 @@ def movies():
 
 @app.route('/movies/<title>')
 def movie(title):
-  query = "SElECT * FROM movie WHERE movie.title = '{0}'".format(title)
+  query = "SElECT * FROM movie INNER JOIN directs ON directs.movie_id=movie.id WHERE movie.title = '{0}'".format(title)
   cursor = g.conn.execute(query)
-  movie = []
+  movieTitle = ""
+  moviePopularity = 0
+  movieLength = 0
+  movieYear = 0
+  movieDirector = ""
+  actors = []
+
   for result in cursor:
-    movie.append(result['title'])  # can also be accessed using result[0]
+    movieTitle = result['title']
+    moviePopularity = result['popularity']
+    movieLength = result['length']
+    movieYear = result['year']
+    movieDirector = result['director_name']
   cursor.close()
  
-  context = dict(data = movie)
-  return render_template("movie.html", **context)
+  # context = dict(data = movie)
+  return render_template("movie.html", title=movieTitle, popularity=moviePopularity, length=movieLength, year=movieYear, director=movieDirector)
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
