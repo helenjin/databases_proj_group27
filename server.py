@@ -219,7 +219,7 @@ def movie(title):
   movieLength = 0
   movieYear = 0
   movieDirector = ""
-  actors = []
+  movieID = 0
 
   for result in cursor:
     movieTitle = result['title']
@@ -227,6 +227,7 @@ def movie(title):
     movieLength = result['length']
     movieYear = result['year']
     movieDirector = result['director_name']
+    movieID = result['id']
   cursor.close()
 
   actors = []
@@ -242,8 +243,14 @@ def movie(title):
   for result in cursor:
       awards.append(result[0])
   cursor.close()
-  
-  return render_template("movie.html", title=movieTitle, popularity=moviePopularity, length=movieLength, year=movieYear, director=movieDirector, actors=actors, awards=awards)
+
+  movieGenre = ""
+  query = "SELECT genre_name FROM is_a WHERE id = '{0}'".format(movieID)
+  cursor = g.conn.execute(query)
+  for result in cursor:
+      movieGenre = result['genre_name']
+
+  return render_template("movie.html", title=movieTitle, popularity=moviePopularity, length=movieLength, year=movieYear, director=movieDirector, actors=actors, awards=awards, genre=movieGenre)
 
 @app.route('/directors/<name>')
 def director(name):
@@ -260,7 +267,6 @@ def director(name):
     for result in cursor:
          movies.append(result['title'])
     cursor.close()
-
 
     return render_template("director.html", name=name, studio=studio, movies=movies)
 
@@ -289,7 +295,6 @@ def actor(name):
         name = result['name']
         sag_number = result['sag_number']
         actor_id = result['id']
-        #print(actor_id) ## something wrong here
     cursor.close()
 
     movies = []
