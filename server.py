@@ -255,6 +255,23 @@ def director(name):
 
     return render_template("director.html", name=name, studio=studio, movies=movies)
 
+@app.route('/genres/<genre_name>')
+def genre(genre_name):
+    query = "SELECT * FROM genre WHERE genre.genre_name = '{0}'".format(genre_name)
+    cursor = g.conn.execute(query)
+    for result in cursor:
+        genre_name = result['genre_name']
+    cursor.close()
+
+    movies = []
+    query = "SELECT movie.title FROM movie INNER JOIN is_a ON movie.id = is_a.id WHERE is_a.genre_name = '{0}'".format(genre_name)
+    cursor = g.conn.execute(query)
+    for result in cursor:
+        movies.append(result['title'])
+    cursor.close()
+
+    return render_template("genre.html", genre_name=genre_name, movies=movies)
+
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
