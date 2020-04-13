@@ -186,9 +186,16 @@ def movie(title):
     movieYear = result['year']
     movieDirector = result['director_name']
   cursor.close()
+
+  actors = []
+  query = "SELECT actor.name FROM actor INNER JOIN plays_in ON actor.id=plays_in.actor_id INNER JOIN movie ON plays_in.movie_id=movie.id WHERE movie.title = '{}'".format(title)
+  cursor = g.conn.execute(query)
+  for result in cursor:
+      actors.append(result[0])
+  cursor.close
  
   # context = dict(data = movie)
-  return render_template("movie.html", title=movieTitle, popularity=moviePopularity, length=movieLength, year=movieYear, director=movieDirector)
+  return render_template("movie.html", title=movieTitle, popularity=moviePopularity, length=movieLength, year=movieYear, director=movieDirector, actors=actors)
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])

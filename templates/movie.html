@@ -13,7 +13,10 @@
 	<h3>Popularity: {{popularity}}</h3>
 	<h3>Length: {{length}} minutes</h3>
  	<h3>Director: {{director}}</h3> 
-  
+	<h3>Actors:</h3>
+ 	{%for a in actors:%}
+	<h3>{{a}}</h3>
+	{% endfor %}
 
 
 </body>
