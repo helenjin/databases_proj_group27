@@ -179,6 +179,27 @@ def directors():
     context = dict(data = directors)
     return render_template("directors.html", **context)
 
+@app.route('/genres')
+def genres():
+    cursor = g.conn.execute("SELECT * FROM genre ORDER BY genre.genre_name")
+    genres = []
+    for result in cursor:
+        genres.append(result['genre_name'])
+    cursor.close()
+
+    context = dict(data = genres)
+    return render_template("genres.html", **context)
+
+@app.route('/actors')
+def actors():
+    cursor = g.conn.execute("SELECT * FROM actor ORDER BY actor.name")
+    actors = []
+    for result in cursor:
+        actors.append(result['name'])
+    cursor.close()
+
+    context = dict(data = actors)
+    return render_template("actors.html", **context)
 
 @app.route('/movies/<title>')
 def movie(title):
@@ -234,6 +255,7 @@ def director(name):
 
     return render_template("director.html", name=name, studio=studio, movies=movies)
 
+
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
 def add():
@@ -253,7 +275,7 @@ if __name__ == "__main__":
   @click.command()
   @click.option('--debug', is_flag=True)
   @click.option('--threaded', is_flag=True)
-  @click.argument('HOST', default='0.0.0.0')
+  @click.argument('HOST', default='0.0.0.0') # external IP address of VM instance: 35.185.56.218
   @click.argument('PORT', default=8111, type=int)
   def run(debug, threaded, host, port):
     """
