@@ -12,8 +12,10 @@
 	<h3>SAG Number: {{sag_number}}</h3>
 	
 	<h3>Movies:</h3>
- 	{%for m in movies:%}
-	<h3>{{m}}</h3>
+ 	{% for m in movies: %}
+	{% set link = '/movies/' + m %}
+	{% set link = link.replace(" ", "%20") %}
+	<div><a href={{link}}>{{m}}</a></div>
 	{% endfor %}
 	
 
