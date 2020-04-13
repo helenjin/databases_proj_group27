@@ -1,0 +1,22 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+<body>
+	<h1>{{name}}</h1>
+	<h3>SAG Number: {{sag_number}}</h3>
+	
+	<h3>Movies:</h3>
+ 	{%for m in movies:%}
+	<h3>{{m}}</h3>
+	{% endfor %}
+	
+
+</body>
+
+</html>
