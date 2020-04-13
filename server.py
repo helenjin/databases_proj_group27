@@ -174,7 +174,7 @@ def directors():
     directors = []
     for result in cursor:
         directors.append(result['name'])
-    cursor.close
+    cursor.close()
 
     context = dict(data = directors)
     return render_template("directors.html", **context)
@@ -204,16 +204,35 @@ def movie(title):
   cursor = g.conn.execute(query)
   for result in cursor:
       actors.append(result[0])
-  cursor.close
+  cursor.close()
   
   awards = []
   query = "SELECT won.award_name FROM won INNER JOIN movie ON movie.id=won.id WHERE movie.title = '{0}'".format(title)
   cursor = g.conn.execute(query)
   for result in cursor:
       awards.append(result[0])
-  cursor.close
+  cursor.close()
   
   return render_template("movie.html", title=movieTitle, popularity=moviePopularity, length=movieLength, year=movieYear, director=movieDirector, actors=actors, awards=awards)
+
+@app.route('/directors/<name>')
+def director(name):
+    query = "SELECT * FROM director WHERE director.name = '{0}'".format(name)
+    cursor = g.conn.execute(query)
+    for result in cursor:
+        name = result['name']
+        studio = result['studio']
+    cursor.close()
+    
+    movies = []
+    query = "SELECT movie.title FROM movie INNER JOIN directs ON movie.id = directs.movie_id WHERE directs.director_name = '{0}'".format(name)
+    cursor = g.conn.execute(query)
+    for result in cursor:
+         movies.append(result['title'])
+    cursor.close()
+
+
+    return render_template("director.html", name=name, studio=studio, movies=movies)
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
