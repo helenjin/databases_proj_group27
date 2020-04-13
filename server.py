@@ -168,6 +168,18 @@ def movies():
   context = dict(data = movies)
   return render_template("movies.html", **context)
 
+@app.route('/directors')
+def directors():
+    cursor = g.conn.execute("SELECT * FROM director ORDER BY director.name")
+    directors = []
+    for result in cursor:
+        directors.append(result['name'])
+    cursor.close
+
+    context = dict(data = directors)
+    return render_template("directors.html", **context)
+
+
 @app.route('/movies/<title>')
 def movie(title):
   query = "SElECT * FROM movie INNER JOIN directs ON directs.movie_id=movie.id WHERE movie.title = '{0}'".format(title)
