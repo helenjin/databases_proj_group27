@@ -12,7 +12,7 @@ import os
   # accessible as a variable in index.html:
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
-from flask import Flask, request, render_template, g, redirect, Response
+from flask import Flask, request, render_template, g, redirect, Response, session, flash
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -63,6 +63,15 @@ def before_request():
     print("uh oh, problem connecting to database")
     import traceback; traceback.print_exc()
     g.conn = None
+
+
+  username = session.get('username')
+
+  if username is None:
+    g.user = None
+  else:
+    query = "SELECT * FROM userr WHERE username = '{}'".format(username)
+    g.user = g.conn.execute(query).fetchone()
 
 @app.teardown_request
 def teardown_request(exception):
@@ -299,11 +308,61 @@ def add():
   g.conn.execute('INSERT INTO test(name) VALUES (%s)', name)
   return redirect('/')
 
-@app.route('/login')
+@app.route('/login', methods=('GET', 'POST'))
 def login():
-    abort(401)
-    this_is_never_executed()
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        error = None
+        query = "SELECT * FROM userr WHERE username = '{}'".format(username)
+        user = g.conn.execute(query).fetchone()
 
+        if user is None:
+            error = 'Incorrect username.'
+        elif user['password'] != password:
+            error = 'Incorrect password.'
+
+        if error is None:
+            session.clear()
+            session['username'] = user['username']
+            return redirect('/')
+
+        flash(error)
+
+    return render_template("login.html")
+
+@app.route('/register', methods=('GET', 'POST'))
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        error = None
+
+        query = "SELECT username FROM userr WHERE username = '{0}'".format(username)
+        if not username:
+            error = 'Username is required.'
+        elif not password:
+            error = 'Password is required.'
+        elif not email:
+            error = 'Email is required.'
+        elif g.conn.execute(query).fetchone() is not None:
+            error = 'User {} is already registered.'.format(username)
+
+        if error is None:
+            query = "INSERT INTO userr (username, password, dob, email) VALUES ('{0}', '{1}', NULL, '{2}')".format(username, password, email)
+            g.conn.execute(query)
+            #db.commit()
+            return redirect('/login')
+
+        flash(error)
+
+    return render_template("register.html")
+
+@app.route('/logout', methods=('GET', 'POST'))
+def logout():
+    session.clear()
+    return redirect('/')
 
 if __name__ == "__main__":
   import click
@@ -328,6 +387,8 @@ if __name__ == "__main__":
 
     HOST, PORT = host, port 
     print("running on %s:%d" % (HOST, PORT))
+    app.secret_key = 'super secret key'
+    app.config['SESSION_TYPE'] = 'filesystem'
     app.run(host=HOST, port=PORT, debug=debug, threaded=threaded)
 
   run()
