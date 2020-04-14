@@ -152,6 +152,7 @@ def index():
   # context = dict(data = movies)
 
   # some interesting queries
+  # query1
   actors_1 = []
   counts_1 = []
   query = "SELECT actor.name, count(actor.id) \
@@ -168,7 +169,8 @@ def index():
       counts_1.append(result['count'])
   cursor.close()
 
-  
+  # query2
+
 
   #
   # render_template looks in the templates/ folder for files.
