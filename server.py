@@ -113,15 +113,15 @@ def index():
   # DEBUG: this is debugging code to see what request looks like
   print(request.args)
 
-
   #
   # example of a database query
   #
-  cursor = g.conn.execute("SELECT * FROM movie")
-  movies = []
-  for result in cursor:
-    movies.append(result['title'])  # can also be accessed using result[0]
-  cursor.close()
+  #  cursor = g.conn.execute("SELECT * FROM movie")
+  #  movies = []
+  # for result in cursor:
+  #   movies.append(result['title'])  # can also be accessed using result[0]
+  # cursor.close()
+
 
   #
   # Flask uses Jinja templates, which is an extension to HTML where you can
@@ -149,14 +149,33 @@ def index():
   #     <div>{{n}}</div>
   #     {% endfor %}
   #
-  context = dict(data = movies)
+  # context = dict(data = movies)
 
+  # some interesting queries
+  actors_1 = []
+  counts_1 = []
+  query = "SELECT actor.name, count(actor.id) \
+            FROM directs \
+            INNER JOIN movie ON directs.movie_id=movie.id \
+            INNER JOIN plays_in ON movie.id = plays_in.movie_id \
+            INNER JOIN actor ON plays_in.actor_id = actor.id \
+            WHERE directs.director_name = 'Wes Anderson' \
+            GROUP BY actor.id \
+            HAVING count(actor.id) > 1"
+  cursor = g.conn.execute(query)
+  for result in cursor:
+      actors_1.append(result['name'])
+      counts_1.append(result['count'])
+  cursor.close()
+
+  
 
   #
   # render_template looks in the templates/ folder for files.
   # for example, the below file reads template/index.html
   #
-  return render_template("index.html", **context)
+  # return render_template("index.html", **context)
+  return render_template("index.html", actors_1=actors_1, counts_1=counts_1)
 
 #
 # This is an example of a different path.  You can see it at:
