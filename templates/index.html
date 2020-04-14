@@ -37,7 +37,48 @@
 <p><a href="directors">See Directors</a></p>
 <p><a href="actors">See Actors</a></p>
 
-<h2>Some interesting queries:</h2>
+<h2>Some interesting queries...</h2>
+
+<!--
+<div id="query1">1. actors frequently cast by a certain director (ex. wes anderson) </div>
+
+<script>
+var x ="table", i;
+for (i=1; i<=6; i++) {
+  x = x + "<h" + i + ">Heading " + i + "</h" + i + ">";
+}
+document.getElementById("query1").innerHTML = x;
+</script>
+-->
+<h3> 1. actors frequently cast by a certain director (ex. Wes Anderson) </h3>
+<p> actors: 
+	{% for actor in actors_1: %}
+		{% set link = '/actors/' + actor %}
+		{% set link = link.replace(" ", "%20") %}
+		<a href={{link}}>{{actor}}</a>;
+	{% endfor %}
+</p>
+<p> counts: 
+	{% for count in counts_1: %}
+		{{count}};
+	{% endfor %}
+</p>
+<!--
+<table>
+	<tr>
+		<th>Actor</th>
+		<th>Count</th>
+	</tr>
+</table>
+-->
+<!--
+	{% for actor in actors_1: %}
+	{% set link = '/actors/' + actor %}
+	{% set link = link.replace(" ", "%20") %}
+	<tr><a href={{link}}>{{actor}}</a></tr>
+	{% endfor %}
+-->	
+
 
 
 
