@@ -249,6 +249,7 @@ def movie(title):
   cursor = g.conn.execute(query)
   for result in cursor:
       movieGenre = result['genre_name']
+  cursor.close()
 
   return render_template("movie.html", title=movieTitle, popularity=moviePopularity, length=movieLength, year=movieYear, director=movieDirector, actors=actors, awards=awards, genre=movieGenre)
 
@@ -305,6 +306,7 @@ def actor(name):
     cursor.close()
 
     return render_template("actor.html", name=name, sag_number=sag_number, movies=movies)
+
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
