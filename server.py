@@ -170,6 +170,22 @@ def index():
   cursor.close()
 
   # query2
+  award_names_2 = []
+  years_2 = []
+  titles_2 = []
+  query = "SELECT won.award_name, won.year, movie.title \
+            FROM won \
+            INNER JOIN movie ON won.id = movie.id \
+            INNER JOIN directs ON movie.id = directs.movie_id \
+            WHERE directs.director_name = 'Wes Anderson';"
+  cursor = g.conn.execute(query)
+  for result in cursor:
+      award_names_2.append(result['award_name'])
+      years_2.append(result['year'])
+      titles_2.append(result['title'])
+  cursor.close()
+
+  # query3
 
 
   #
@@ -177,7 +193,9 @@ def index():
   # for example, the below file reads template/index.html
   #
   # return render_template("index.html", **context)
-  return render_template("index.html", actors_1=actors_1, counts_1=counts_1)
+  return render_template("index.html", actors_1=actors_1, counts_1=counts_1, \
+                            award_names_2= award_names_2, years_2=years_2, titles_2=titles_2 \
+                         )
 
 #
 # This is an example of a different path.  You can see it at:
