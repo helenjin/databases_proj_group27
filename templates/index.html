@@ -52,14 +52,14 @@ document.getElementById("query1").innerHTML = x;
 -->
 <h3> 1. Actors frequently cast by a certain director (ex. Wes Anderson) </h3>
 <p> actor: 
-	{% for actor in actors_1: %}
+	{% for actor in actor_1: %}
 		{% set link = '/actors/' + actor %}
 		{% set link = link.replace(" ", "%20") %}
 		<a href={{link}}>{{actor}}</a>;
 	{% endfor %}
 </p>
 <p> count: 
-	{% for count in counts_1: %}
+	{% for count in count_1: %}
 		{{count}};
 	{% endfor %}
 </p>
@@ -81,22 +81,47 @@ document.getElementById("query1").innerHTML = x;
 
 <h3> 2. All the awards that movies by a director have won (ex. Wes Anderson)</h3>
 <p> award name:
-	{% for award in award_names_2: %}
+	{% for award in award_name_2: %}
 		{{award}};
 	{% endfor %}
 </p>
 <p> year:
-	{% for year in years_2: %}
+	{% for year in year_2: %}
 		{{year}};
 	{% endfor %}
 </p>
 <p> movie title:
-	{% for title in titles_2: %}
+	{% for title in title_2: %}
 		{% set link = '/movies/' + title %}
 		{% set link = link.replace(" ", "%20") %}
 		<a href={{link}}>{{title}}</a>;
 	{% endfor %}
 </p>
+
+<h3> 3. Info about movies in the drama genre with more than a 90 popularity </h3>
+<p> movie title:
+	{% for title in title_3: %}
+		{% set link = '/movies/' + title %}
+		{% set link = link.replace(" ", "%20") %}
+		<a href={{link}}>{{title}}</a>;
+	{% endfor %}
+</p>
+<p> length:
+	{% for length in length_3: %}
+		{{length}};
+	{% endfor %}
+</p>
+<p> year:
+	{% for year in year_3: %}
+		{{year}};
+	{% endfor %}
+</p>
+<p> popularity:
+	{% for pop in popularity_3: %}
+		{{pop}};
+	{% endfor %}
+</p>
+
 
 <h2> Search bar... </h2>
 <form method="POST" action="/add"> <!-- this should be /search but we will add this functionality later -->

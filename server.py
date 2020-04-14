@@ -153,8 +153,8 @@ def index():
 
   # some interesting queries
   # query1
-  actors_1 = []
-  counts_1 = []
+  actor_1 = []
+  count_1 = []
   query = "SELECT actor.name, count(actor.id) \
             FROM directs \
             INNER JOIN movie ON directs.movie_id=movie.id \
@@ -165,14 +165,14 @@ def index():
             HAVING count(actor.id) > 1"
   cursor = g.conn.execute(query)
   for result in cursor:
-      actors_1.append(result['name'])
-      counts_1.append(result['count'])
+      actor_1.append(result['name'])
+      count_1.append(result['count'])
   cursor.close()
 
   # query2
-  award_names_2 = []
-  years_2 = []
-  titles_2 = []
+  award_name_2 = []
+  year_2 = []
+  title_2 = []
   query = "SELECT won.award_name, won.year, movie.title \
             FROM won \
             INNER JOIN movie ON won.id = movie.id \
@@ -180,21 +180,36 @@ def index():
             WHERE directs.director_name = 'Wes Anderson';"
   cursor = g.conn.execute(query)
   for result in cursor:
-      award_names_2.append(result['award_name'])
-      years_2.append(result['year'])
-      titles_2.append(result['title'])
+      award_name_2.append(result['award_name'])
+      year_2.append(result['year'])
+      title_2.append(result['title'])
   cursor.close()
 
   # query3
-
+  title_3 = []
+  length_3 = []
+  year_3 = []
+  popularity_3 = []
+  query = "SELECT movie.title, movie.length, movie.year, movie.popularity \
+            FROM movie \
+            INNER JOIN is_a ON is_a.id = movie.id \
+            WHERE is_a.genre_name = 'drama' AND movie.popularity > 90;"
+  cursor = g.conn.execute(query)
+  for result in cursor:
+      title_3.append(result['title'])
+      length_3.append(result['length'])
+      year_3.append(result['year'])
+      popularity_3.append(result['popularity'])
+  cursor.close()
 
   #
   # render_template looks in the templates/ folder for files.
   # for example, the below file reads template/index.html
   #
   # return render_template("index.html", **context)
-  return render_template("index.html", actors_1=actors_1, counts_1=counts_1, \
-                            award_names_2= award_names_2, years_2=years_2, titles_2=titles_2 \
+  return render_template("index.html", actor_1=actor_1, count_1=count_1, \
+                            award_name_2=award_name_2, year_2=year_2, title_2=title_2, \
+                            title_3=title_3, length_3=length_3, year_3=year_3, popularity_3=popularity_3
                          )
 
 #
